@@ -1,4 +1,4 @@
-import {React, useState } from 'react'
+import {React, useEffect, useState } from 'react'
 
 const EMAILREGEXP = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
 
@@ -8,21 +8,30 @@ const New = (props) => {
   const [password, setPassword] = useState()
   const [errorMessage, setErrorMessage] = useState({})
   const [isFormValid, setIsFormValid] = useState(false)
+  const [disabled, setDisabled] = useState('disbaled')
+  const [emailErrorClass, setEmailErrorClass] = useState('')
+  const [passwordErrorClass, setPasswordErrorClass] = useState('')
 
-  const onSubmitHandler = event => {
-    event.preventDefault()
+  const isInvalid = () => Object.keys(errorMessage).map((_k, v) => { return v.length > 0 }).includes(true)
+
+  useEffect(() => {
+      let validPassoword = false
+      let validEmail = false
 
     if(password && password.length < 6 ) {
       setErrorMessage((prevState) => ({
         ...prevState,
         password: 'Password must be minmum 6 character long'
       }));
+      setPasswordErrorClass('error')
     }
     else {
       setErrorMessage((prevState) => ({
         ...prevState,
         password: null
       }));
+      validPassoword = true
+      setPasswordErrorClass('')
     }
 
     if (email && EMAILREGEXP.test(email)) {
@@ -30,6 +39,8 @@ const New = (props) => {
         ...prevState,
         email: null
       }));
+      validEmail = true
+      setEmailErrorClass('')
     }
 
     else {
@@ -37,7 +48,17 @@ const New = (props) => {
         ...prevState,
         email: 'Please enter valid email'
       }));
+      setDisabled('disabled')
+      setEmailErrorClass('error')
     }
+    if (validPassoword && validEmail) {
+      setDisabled('')
+    }
+    else { setDisabled('disabled')}
+  }, [setErrorMessage, password, email, setDisabled])
+
+  const onSubmitHandler = event => {
+    event.preventDefault()
 
     const user = { email: 'ankur@gmail.com', password: 'shivyog' }
 
@@ -52,11 +73,7 @@ const New = (props) => {
       setErrorMessage(() => ({}));
     }
 
-    setIsFormValid(() => {
-      const isInvalid = Object.keys(errorMessage).map((v, _i) => { return v.length > 0 }).includes(true)
-        if (isInvalid) return false
-        return true
-    })
+    setIsFormValid(() => !(isInvalid))
 
     if(isFormValid) {
       localStorage.setItem('isLoggedIn', '1')
@@ -88,29 +105,29 @@ const New = (props) => {
           <div className="login-form">
          
             <form onSubmit= {onSubmitHandler}>
-            <label> { errorMessage.invalidCred } </label>
+            <label className='alert-danger'> { errorMessage.invalidCred } </label>
               <div className="form-group">
                 <label>Email</label>
                 <input
                   type="email"
-                  className="form-control"
+                  className={`form-control ${emailErrorClass}`}
                   placeholder="Email"
                   onChange={emailHandler}
                   />
-                { errorMessage['email'] }
+                <label className='alert-danger'> { errorMessage['email'] }</label>
               </div>
               <div className="form-group">
                 <label>Password</label>
                 <input
                   type="password"
-                  className="form-control"
+                  className={`form-control ${passwordErrorClass}`}
                   placeholder="Password"
                   autoComplete='off'
                   onChange={passwordHandler}
                   />
-                { errorMessage['password'] }
+                <label className='alert-danger'> { errorMessage['password'] }</label>
               </div>
-              <button type="submit" className="btn btn-secondary">
+              <button type="submit" className={`btn btn-secondary ${disabled}`}>
                 Login
               </button>
             </form>
