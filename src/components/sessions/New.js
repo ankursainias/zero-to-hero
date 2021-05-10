@@ -15,46 +15,55 @@ const New = (props) => {
   const isInvalid = () => Object.keys(errorMessage).map((_k, v) => { return v.length > 0 }).includes(true)
 
   useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log('VALIDATING')
       let validPassoword = false
       let validEmail = false
 
-    if(password && password.length < 6 ) {
-      setErrorMessage((prevState) => ({
-        ...prevState,
-        password: 'Password must be minmum 6 character long'
-      }));
-      setPasswordErrorClass('error')
-    }
-    else {
-      setErrorMessage((prevState) => ({
-        ...prevState,
-        password: null
-      }));
-      validPassoword = true
-      setPasswordErrorClass('')
-    }
+      if(password && password.length < 6 ) {
+        setErrorMessage((prevState) => ({
+          ...prevState,
+          password: 'Password must be minmum 6 character long'
+        }));
+        setPasswordErrorClass('error')
+      }
+      else {
+        setErrorMessage((prevState) => ({
+          ...prevState,
+          password: null
+        }));
+        validPassoword = true
+        setPasswordErrorClass('')
+      }
 
-    if (email && EMAILREGEXP.test(email)) {
-      setErrorMessage((prevState) => ({
-        ...prevState,
-        email: null
-      }));
-      validEmail = true
-      setEmailErrorClass('')
-    }
+      if (email && EMAILREGEXP.test(email)) {
+        setErrorMessage((prevState) => ({
+          ...prevState,
+          email: null
+        }));
+        validEmail = true
+        setEmailErrorClass('')
+      }
 
-    else {
-      setErrorMessage((prevState) => ({
-        ...prevState,
-        email: 'Please enter valid email'
-      }));
-      setDisabled('disabled')
-      setEmailErrorClass('error')
+      else {
+        setErrorMessage((prevState) => ({
+          ...prevState,
+          email: 'Please enter valid email'
+        }));
+        setDisabled('disabled')
+        setEmailErrorClass('error')
+      }
+      if (validPassoword && validEmail) {
+        setDisabled('')
+      }
+      else { 
+        setDisabled('disabled')
+      }
+    }, 500)
+    return () => {
+      console.log('CLEANUP')
+      clearTimeout(identifier)
     }
-    if (validPassoword && validEmail) {
-      setDisabled('')
-    }
-    else { setDisabled('disabled')}
   }, [setErrorMessage, password, email, setDisabled])
 
   const onSubmitHandler = event => {
