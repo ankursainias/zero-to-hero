@@ -1,24 +1,36 @@
-import {React, useEffect, useState } from 'react'
+import {React, useEffect, useState, useReducer } from 'react'
 
 const EMAILREGEXP = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
 
+const EmailReducer = ( state, action ) => {
+
+  switch (action.type) {
+    case 'INPUT_EMAIL':
+      return { value: action.val, isValid: EMAILREGEXP.test(action.val) } 
+      break;
+    default:
+     return { value: '', isValid: false }
+      break;
+  }
+}
+
 const New = (props) => {
 
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
-  const [errorMessage, setErrorMessage] = useState({})
-  const [isFormValid, setIsFormValid] = useState(false)
-  const [disabled, setDisabled] = useState('disbaled')
   const [emailErrorClass, setEmailErrorClass] = useState('')
+  const [password, setPassword] = useState()
   const [passwordErrorClass, setPasswordErrorClass] = useState('')
+  const [errorMessage, setErrorMessage] = useState({})
+  const [disabled, setDisabled] = useState('disbaled')
+
+  const [emailState, dispachedEmail] = useReducer(EmailReducer, { value: '', isValid: false } )
 
   const isInvalid = () => Object.keys(errorMessage).map((_k, v) => { return v.length > 0 }).includes(true)
 
   useEffect(() => {
     const identifier = setTimeout(() => {
+
       console.log('VALIDATING')
       let validPassoword = false
-      let validEmail = false
 
       if(password && password.length < 6 ) {
         setErrorMessage((prevState) => ({
@@ -36,12 +48,11 @@ const New = (props) => {
         setPasswordErrorClass('')
       }
 
-      if (email && EMAILREGEXP.test(email)) {
+      if (emailState.isValid) {
         setErrorMessage((prevState) => ({
           ...prevState,
           email: null
         }));
-        validEmail = true
         setEmailErrorClass('')
       }
 
@@ -53,7 +64,7 @@ const New = (props) => {
         setDisabled('disabled')
         setEmailErrorClass('error')
       }
-      if (validPassoword && validEmail) {
+      if (validPassoword && emailState.isValid) {
         setDisabled('')
       }
       else { 
@@ -64,14 +75,14 @@ const New = (props) => {
       console.log('CLEANUP')
       clearTimeout(identifier)
     }
-  }, [setErrorMessage, password, email, setDisabled])
+  }, [setErrorMessage, password, emailState.value, setDisabled])
 
   const onSubmitHandler = event => {
     event.preventDefault()
 
     const user = { email: 'ankur@gmail.com', password: 'shivyog' }
 
-    if (email !== user.email || password !== user.password){
+    if (emailState.value !== user.email || password !== user.password){
 
       setErrorMessage((prevState) => ({
         ...prevState,
@@ -82,9 +93,10 @@ const New = (props) => {
       setErrorMessage(() => ({}));
     }
 
-    setIsFormValid(() => !(isInvalid))
-
-    if(isFormValid) {
+    if(isInvalid()) {
+      console.log('invalid some values')
+    }
+    else {
       localStorage.setItem('isLoggedIn', '1')
       props.authenticate()
     }
@@ -95,7 +107,7 @@ const New = (props) => {
   }
 
   const emailHandler = event => {
-    setEmail(event.target.value)
+    dispachedEmail({ type: 'INPUT_EMAIL', val: event.target.value })
   }
 
   return (

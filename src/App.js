@@ -14,7 +14,7 @@ function App() {
     if (localStorage.getItem('isLoggedIn') === '1'){
       setIsLoginedIn(true)
     }
-  })
+  }, [setIsLoginedIn])
 
   const authHandler = () => {
 
