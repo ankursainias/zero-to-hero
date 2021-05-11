@@ -5,15 +5,10 @@ import AuthContext from '../../store/auth-context'
 const EMAILREGEXP = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
 
 const EmailReducer = ( state, action ) => {
-
-  switch (action.type) {
-    case 'INPUT_EMAIL':
-      return { value: action.val, isValid: EMAILREGEXP.test(action.val) } 
-      break;
-    default:
-     return { value: '', isValid: false }
-      break;
+  if (action.type === 'INPUT_EMAIL'){
+    return { value: action.val, isValid: EMAILREGEXP.test(action.val) } 
   }
+  return { value: '', isValid: false }
 }
 
 const PasswordReducer = (state, action) => {
@@ -24,21 +19,23 @@ const PasswordReducer = (state, action) => {
 }
 
 const New = (props) => {
+
   const ctx = useContext(AuthContext)
 
   const [emailErrorClass, setEmailErrorClass] = useState('')
-  // const [password, setPassword] = useState()
+
   const [passwordErrorClass, setPasswordErrorClass] = useState('')
+
   const [errorMessage, setErrorMessage] = useState({})
+
   const [disabled, setDisabled] = useState('disbaled')
 
   const [emailState, dispachedEmail] = useReducer(EmailReducer, { value: '', isValid: false } )
   
   const [passwordState, dispachedPassword] = useReducer(PasswordReducer, { value: '', isValid: false } )
 
-  const isInvalid = () => Object.keys(errorMessage).map((_k, v) => { return v.length > 0 }).includes(true)
-
   const { isValid: isEmailValid } = emailState
+
   const { isValid: isPasswordValid } = passwordState
 
   useEffect(() => {
@@ -94,27 +91,7 @@ const New = (props) => {
 
   const onSubmitHandler = event => {
     event.preventDefault()
-
-    const user = { email: 'ankur@gmail.com', password: 'shivyog' }
-
-    if (emailState.value !== user.email || passwordState.value !== user.password){
-
-      setErrorMessage((prevState) => ({
-        ...prevState,
-        invalidCred: 'Email or password is invalid'
-      }));
-    }
-    else {
-      setErrorMessage(() => ({}));
-    }
-
-    if(isInvalid()) {
-      console.log('invalid some values')
-    }
-    else {
-      localStorage.setItem('isLoggedIn', '1')
-        props.authenticate()
-    }
+    ctx.onLogin(emailState.value, passwordState.value)
   }
 
   const passwordHandler = event => {
@@ -141,7 +118,6 @@ const New = (props) => {
           <div className="login-form">
          
             <form onSubmit= {onSubmitHandler}>
-            <label className='alert-danger'> { errorMessage.invalidCred } </label>
               <div className="form-group">
                 <label>Email</label>
                 <input

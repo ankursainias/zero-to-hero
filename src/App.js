@@ -1,33 +1,20 @@
-import { React, useState, useEffect } from "react";
+import { React, useContext } from "react";
 import Navbar from './components/navbar'
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LoginForm from './components/sessions/New'
 import AuthContext from './store/auth-context'
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer} from 'react-notifications';
 
-function App() {
-  const [isLoginedIn, setIsLoginedIn] = useState(false)
+const App = () => {
+  const ctx = useContext(AuthContext)
 
-  useEffect(() => {
-
-    if (localStorage.getItem('isLoggedIn') === '1'){
-      setIsLoginedIn(true)
-    }
-  }, [setIsLoginedIn])
-
-  const authHandler = () => {
-    if (localStorage.getItem('isLoggedIn') === '1'){
-        setIsLoginedIn(true)
-      }
-      else { setIsLoginedIn(false) }
-  }
-
-  return (
-    <AuthContext.Provider value= {{ isLoggedIn: isLoginedIn, isLogedOut: !(isLoginedIn) }}>
-      <Navbar authenticate= {authHandler} /> 
-      {isLoginedIn ? null : <LoginForm authenticate={authHandler} /> }
-    </AuthContext.Provider>)
+  return (<>
+      <NotificationContainer />
+      {ctx.isLoginedIn ?  <Navbar /> : <LoginForm /> }
+    </>)
 }
 
 export default App;

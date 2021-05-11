@@ -1,6 +1,7 @@
 import Navbar from './navbar'
 
-const Home = () =>{
+const Home = () => {
+
   return (<>
     <Navbar />
   </>)
