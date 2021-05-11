@@ -1,4 +1,6 @@
-import {React, useEffect, useState, useReducer } from 'react'
+import {React, useEffect, useState, useReducer, useContext } from 'react'
+
+import AuthContext from '../../store/auth-context'
 
 const EMAILREGEXP = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
 
@@ -22,6 +24,7 @@ const PasswordReducer = (state, action) => {
 }
 
 const New = (props) => {
+  const ctx = useContext(AuthContext)
 
   const [emailErrorClass, setEmailErrorClass] = useState('')
   // const [password, setPassword] = useState()
@@ -110,7 +113,7 @@ const New = (props) => {
     }
     else {
       localStorage.setItem('isLoggedIn', '1')
-      props.authenticate()
+        props.authenticate()
     }
   }
 

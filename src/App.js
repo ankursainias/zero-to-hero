@@ -17,16 +17,16 @@ function App() {
   }, [setIsLoginedIn])
 
   const authHandler = () => {
-
     if (localStorage.getItem('isLoggedIn') === '1'){
         setIsLoginedIn(true)
       }
+      else { setIsLoginedIn(false) }
   }
 
   return (
-    <AuthContext.Provider value= {{ isLoggedIn: isLoginedIn }}>
-      <Navbar authenticate={authHandler} /> 
-      {!isLoginedIn ? <LoginForm authenticate={authHandler} /> : null }
+    <AuthContext.Provider value= {{ isLoggedIn: isLoginedIn, isLogedOut: !(isLoginedIn) }}>
+      <Navbar authenticate= {authHandler} /> 
+      {isLoginedIn ? null : <LoginForm authenticate={authHandler} /> }
     </AuthContext.Provider>)
 }
 

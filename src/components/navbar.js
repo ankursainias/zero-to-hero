@@ -7,13 +7,15 @@ import {
 
 import Home from './home'
 import AuthContext from '../store/auth-context'
+import { useContext } from 'react'
 
 const Navbar = (props) => {
+
+  const ctx = useContext(AuthContext)
 
   const logoutHandler = () => {
     localStorage.removeItem('isLoggedIn')
      window.location.reload();
-    //  props.authenticate()
   }
 
   return (<AuthContext.Consumer>
@@ -42,7 +44,7 @@ const Navbar = (props) => {
                   <a className="nav-link" onClick={logoutHandler}>Logout</a>
                 </li>
               }
-              { !ctx.isLoggedIn &&
+              { ctx.isLogedOut &&
                 <li className="nav-item">
                   <a className="nav-link" >Login</a>
                 </li>
