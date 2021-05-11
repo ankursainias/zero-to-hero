@@ -14,17 +14,29 @@ const EmailReducer = ( state, action ) => {
   }
 }
 
+const PasswordReducer = (state, action) => {
+  if(action.type === 'INPUT_PASSWORD'){
+    return { value: action.val, isValid:  action.val.length < 6 }
+  }
+  return { value: '', isValid:  false }
+}
+
 const New = (props) => {
 
   const [emailErrorClass, setEmailErrorClass] = useState('')
-  const [password, setPassword] = useState()
+  // const [password, setPassword] = useState()
   const [passwordErrorClass, setPasswordErrorClass] = useState('')
   const [errorMessage, setErrorMessage] = useState({})
   const [disabled, setDisabled] = useState('disbaled')
 
   const [emailState, dispachedEmail] = useReducer(EmailReducer, { value: '', isValid: false } )
+  
+  const [passwordState, dispachedPassword] = useReducer(PasswordReducer, { value: '', isValid: false } )
 
   const isInvalid = () => Object.keys(errorMessage).map((_k, v) => { return v.length > 0 }).includes(true)
+
+  const { isValid: isEmailValid } = emailState
+  const { isValid: isPasswordValid } = passwordState
 
   useEffect(() => {
     const identifier = setTimeout(() => {
@@ -32,7 +44,7 @@ const New = (props) => {
       console.log('VALIDATING')
       let validPassoword = false
 
-      if(password && password.length < 6 ) {
+      if( passwordState.isValid ) {
         setErrorMessage((prevState) => ({
           ...prevState,
           password: 'Password must be minmum 6 character long'
@@ -75,14 +87,14 @@ const New = (props) => {
       console.log('CLEANUP')
       clearTimeout(identifier)
     }
-  }, [setErrorMessage, password, emailState.value, setDisabled])
+  }, [setErrorMessage, isEmailValid, isPasswordValid, setDisabled])
 
   const onSubmitHandler = event => {
     event.preventDefault()
 
     const user = { email: 'ankur@gmail.com', password: 'shivyog' }
 
-    if (emailState.value !== user.email || password !== user.password){
+    if (emailState.value !== user.email || passwordState.value !== user.password){
 
       setErrorMessage((prevState) => ({
         ...prevState,
@@ -103,7 +115,7 @@ const New = (props) => {
   }
 
   const passwordHandler = event => {
-    setPassword(event.target.value)
+    dispachedPassword({ type: 'INPUT_PASSWORD', val: event.target.value })
   }
 
   const emailHandler = event => {
