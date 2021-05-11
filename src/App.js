@@ -1,10 +1,10 @@
 import { React, useState, useEffect } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
 import Navbar from './components/navbar'
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LoginForm from './components/sessions/New'
+import AuthContext from './store/auth-context'
 
 function App() {
   const [isLoginedIn, setIsLoginedIn] = useState(false)
@@ -23,17 +23,11 @@ function App() {
       }
   }
 
-  if (isLoginedIn){
-
-    return (
-      <Router>
-        <Navbar authenticate={authHandler} />
-      </Router>)
-  }
-
-  return (<Router>
-      <LoginForm authenticate={authHandler} />
-    </Router>);
+  return (
+    <AuthContext.Provider value= {{ isLoggedIn: isLoginedIn }}>
+      <Navbar authenticate={authHandler} /> 
+      {!isLoginedIn ? <LoginForm authenticate={authHandler} /> : null }
+    </AuthContext.Provider>)
 }
 
 export default App;
