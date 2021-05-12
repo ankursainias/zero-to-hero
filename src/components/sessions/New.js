@@ -1,6 +1,9 @@
 import {React, useEffect, useState, useReducer, useContext } from 'react'
+import { Redirect } from 'react-router'
 
 import AuthContext from '../../store/auth-context'
+
+import Input from '../UI/Input'
 
 const EMAILREGEXP = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
 
@@ -102,6 +105,10 @@ const New = (props) => {
     dispachedEmail({ type: 'INPUT_EMAIL', val: event.target.value })
   }
 
+  if (ctx.isLoginedIn){
+    return <Redirect to="/about" push={true} />
+  }
+
   return (
     <>
       <div className="sidenav">
@@ -116,32 +123,21 @@ const New = (props) => {
       <div className="main">
         <div className="col-md-6 col-sm-12">
           <div className="login-form">
-         
+
             <form onSubmit= {onSubmitHandler}>
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  className={`form-control ${emailErrorClass}`}
-                  placeholder="Email"
-                  onChange={emailHandler}
-                  />
+
+              <Input label='Email' type="email" classes={`form-control ${emailErrorClass}`}  placeholder="Email" onChange={emailHandler} >
                 <label className='alert-danger'> { errorMessage['email'] }</label>
-              </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input
-                  type="password"
-                  className={`form-control ${passwordErrorClass}`}
-                  placeholder="Password"
-                  autoComplete='off'
-                  onChange={passwordHandler}
-                  />
+              </Input>
+
+              <Input label='Password' type="password" classes={`form-control ${passwordErrorClass}`}  placeholder="Password" onChange={passwordHandler} >
                 <label className='alert-danger'> { errorMessage['password'] }</label>
+              </Input>
+              <div className= 'btn-group'>
+                <button type="submit" className={`btn btn-secondary ${disabled}`}>
+                  Login
+                </button>
               </div>
-              <button type="submit" className={`btn btn-secondary ${disabled}`}>
-                Login
-              </button>
             </form>
           </div>
         </div>
