@@ -1,5 +1,4 @@
 import {React, useEffect, useState, useReducer, useContext } from 'react'
-import { Redirect } from 'react-router'
 
 import AuthContext from '../../store/auth-context'
 
@@ -22,7 +21,6 @@ const PasswordReducer = (state, action) => {
 }
 
 const New = (props) => {
-
   const ctx = useContext(AuthContext)
 
   const [emailErrorClass, setEmailErrorClass] = useState('')
@@ -36,10 +34,6 @@ const New = (props) => {
   const [emailState, dispachedEmail] = useReducer(EmailReducer, { value: '', isValid: false } )
   
   const [passwordState, dispachedPassword] = useReducer(PasswordReducer, { value: '', isValid: false } )
-
-  const { isValid: isEmailValid } = emailState
-
-  const { isValid: isPasswordValid } = passwordState
 
   useEffect(() => {
     const identifier = setTimeout(() => {
@@ -90,7 +84,7 @@ const New = (props) => {
       console.log('CLEANUP')
       clearTimeout(identifier)
     }
-  }, [setErrorMessage, isEmailValid, isPasswordValid, setDisabled])
+  }, [setErrorMessage, emailState.isValid, passwordState.isValid , setDisabled])
 
   const onSubmitHandler = event => {
     event.preventDefault()
@@ -103,10 +97,6 @@ const New = (props) => {
 
   const emailHandler = event => {
     dispachedEmail({ type: 'INPUT_EMAIL', val: event.target.value })
-  }
-
-  if (ctx.isLoginedIn){
-    return <Redirect to="/about" push={true} />
   }
 
   return (

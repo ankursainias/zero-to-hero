@@ -4,6 +4,8 @@ import Home from './home'
 import Newsletter from './newsletter'
 import Error from './Error'
 import LoginForm from './sessions/New'
+import NewMovie from './NewMovie'
+import EditMovie from '../pages/movies/edit'
 
 const AppRoute = () => {
   return (
@@ -12,6 +14,8 @@ const AppRoute = () => {
       <Route exact path="/newsletter" component={Newsletter} />
       <Route exact path="/" component={Home} />
       <Route exact path="/login" component={LoginForm} />
+      <Route exact path="/movies/new" component={NewMovie} />
+      <Route exact path="/movies/:id/edit" component={EditMovie} />
       <Route component={Error} />
     </Switch>
   )

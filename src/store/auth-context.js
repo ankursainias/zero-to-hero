@@ -30,7 +30,7 @@ export const AuthContextProvider = (props) => {
     }
   };
 
-  const logoutHandler = () => {
+  const logoutHandler = (args) => {
     localStorage.removeItem("isLoggedIn");
     setIsLoginedIn(false);
     NotificationManager.info('Successfully logout');
@@ -44,7 +44,7 @@ export const AuthContextProvider = (props) => {
         onLogin: loginHandler,
       }}
     >
-      {props.children}
+    { props.children }
     </AuthContext.Provider>
   );
 };

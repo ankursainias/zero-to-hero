@@ -8,6 +8,7 @@ const Input = (props) => {
           placeholder={props.placeholder}
           onChange={props.onChange}
           autoComplete="off"
+          value ={ props.value }
         />
       </div>
     )
