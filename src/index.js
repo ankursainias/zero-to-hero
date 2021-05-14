@@ -3,15 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { AuthContextProvider } from './store/auth-context'
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from 'react-redux'
+import store from './store/index'
 
 ReactDOM.render(
-    <AuthContextProvider>
+    <Provider store ={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </AuthContextProvider>,
+    </Provider>,
   document.getElementById("root")
 );
 

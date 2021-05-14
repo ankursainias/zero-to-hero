@@ -1,8 +1,10 @@
-import {React, useEffect, useState, useReducer, useContext } from 'react'
-
-import AuthContext from '../../store/auth-context'
+import {React, useEffect, useState, useReducer } from 'react'
 
 import Input from '../UI/Input'
+
+import { authActions } from '../../store/auth'
+
+import { useDispatch } from 'react-redux'
 
 const EMAILREGEXP = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
 
@@ -21,7 +23,7 @@ const PasswordReducer = (state, action) => {
 }
 
 const New = (props) => {
-  const ctx = useContext(AuthContext)
+  const dispatch = useDispatch()
 
   const [emailErrorClass, setEmailErrorClass] = useState('')
 
@@ -88,7 +90,7 @@ const New = (props) => {
 
   const onSubmitHandler = event => {
     event.preventDefault()
-    ctx.onLogin(emailState.value, passwordState.value)
+    dispatch(authActions.login({email: emailState.value, password: passwordState.value }))
   }
 
   const passwordHandler = event => {

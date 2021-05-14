@@ -1,10 +1,15 @@
-import { useContext } from 'react'
-import { NavLink } from "react-router-dom";
-import AuthContext from '../store/auth-context'
+// import { useContext } from 'react'
+import { NavLink, Link, useHistory } from "react-router-dom";
+import { authActions } from '../store/auth'
+import { useDispatch } from 'react-redux'
 
-const Navbar = (props) => {
+const Navbar = () => {
+    let history = useHistory()
+  const dispatch = useDispatch()
 
-  const ctx = useContext(AuthContext)
+  const logoutHandler = () => {
+    dispatch(authActions.logout())
+  }
 
   return (<>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -17,9 +22,12 @@ const Navbar = (props) => {
               <li className="nav-item">
                 <NavLink activeClassName='active' className="nav-link" to="/newsletter">Newsletter</NavLink>
               </li>
-              <li className="nav-item"> 
-              <NavLink className="nav-link" to='#' onClick={ctx.onLogout}>Logout</NavLink>
+              <li className="nav-item">
+                <NavLink activeClassName='active' className="nav-link" to="/counter">Counter</NavLink>
               </li>
+              <li className="nav-item"> 
+                <Link className="nav-link" to='#' onClick={logoutHandler}>Logout</Link>
+              </li> 
             </ul>
           </div>
         </nav>

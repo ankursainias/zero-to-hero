@@ -129,3 +129,8 @@ input[type=submit] {
 input[type=submit]:hover {
   opacity: 0.8;
 }
+
+.counter-input-group{
+  width: 130px;
+  margin: 0 auto;
+}
