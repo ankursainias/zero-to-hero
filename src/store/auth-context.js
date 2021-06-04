@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NotificationManager } from 'react-notifications';
+import { useHistory } from 'react-router-dom'
 
 const AuthContext = React.createContext({
   isLoggedIn: false,

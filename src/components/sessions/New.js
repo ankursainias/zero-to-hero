@@ -1,10 +1,12 @@
 import {React, useEffect, useState, useReducer } from 'react'
 
 import Input from '../UI/Input'
+import { Button } from '../UI/button'
 
 import { authActions } from '../../store/auth'
 
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router'
 
 const EMAILREGEXP = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
 
@@ -24,7 +26,7 @@ const PasswordReducer = (state, action) => {
 
 const New = (props) => {
   const dispatch = useDispatch()
-
+  const history = useHistory()
   const [emailErrorClass, setEmailErrorClass] = useState('')
 
   const [passwordErrorClass, setPasswordErrorClass] = useState('')
@@ -91,6 +93,7 @@ const New = (props) => {
   const onSubmitHandler = event => {
     event.preventDefault()
     dispatch(authActions.login({email: emailState.value, password: passwordState.value }))
+    history.replace('/')
   }
 
   const passwordHandler = event => {
@@ -125,10 +128,8 @@ const New = (props) => {
               <Input label='Password' type="password" classes={`form-control ${passwordErrorClass}`}  placeholder="Password" onChange={passwordHandler} >
                 <label className='alert-danger'> { errorMessage['password'] }</label>
               </Input>
-              <div className= 'btn-group'>
-                <button type="submit" className={`btn btn-secondary ${disabled}`}>
-                  Login
-                </button>
+              <div className= 'btn-group m-t-10'>
+                <Button type="submit" disabled={!!disabled}>Login</Button>
               </div>
             </form>
           </div>
